@@ -3,15 +3,26 @@
 # command: quotacheck.sh
 # description: Check the lustre group quota and send an email
 #              just in case of exceeding the threshold.
+# test: Test copying the dummy.sh script in the same path as
+#       the quotacheck.sh script and set the variable TEST with 
+#       the value soft, hard or veryhard.
 
 
-VERSION=0.2
+VERSION=0.4
 FILESYSTEM="/home"
-DEBUG=0
+DEBUG=1
+PATH=$PATH:/usr/bin
+
+
+if [[ -n $TEST ]]
+then
+        shopt -s expand_aliases
+        alias lfs="`pwd`/dummy.sh"
+fi
 
 
 command() {
-        /usr/bin/lfs -qg ${group} ${FILESYSTEM}
+        lfs quota -qg ${group} ${FILESYSTEM}
 }
 
 
@@ -38,7 +49,7 @@ __EOF__
 
 
 sendmail() {
-        msg | /usr/bin/mail -s "Lustre quota exeeding" ${email}
+        msg | mail -s "Lustre quota exeeding" ${email}
 }
 
 
@@ -102,13 +113,7 @@ then
 fi
 
 
-finger() {
-        /usr/bin/finger $USER
-}
-
-
-# Declare some variable
-declare -a userdata=(`finger`)
+declare -a userdata=(`finger $USER`)
 declare -a quota=(`command`)
 name=${userdata[3]}
 surname=${userdata[4]}
