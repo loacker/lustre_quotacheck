@@ -41,6 +41,7 @@ sendmail() {
 
 usage() {
     cat <<__EOF__
+
 Simple shell script to check the lustre group quota limits.
 Send an email when the threshold is exceeded.
 
@@ -58,7 +59,7 @@ Test:
     Specifing the type of test in the environment variable TEST.
     TEST can assume one values of soft, hard or veryhard.
 
-DEBUG:
+Debug:
     Set the environment variable DEBUG with the value 1.
 
 Examples:
